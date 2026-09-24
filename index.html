@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Understanding Sara Duterte & ICC</title>
+    <style>
+        :root {
+            --background: #ffffff;
+            --foreground: #171717;
+            --primary: #2563eb;
+            --primary-foreground: #ffffff;
+            --secondary: #f3f4f6;
+            --secondary-foreground: #111827;
+            --muted: #f9fafb;
+            --muted-foreground: #6b7280;
+            --accent: #f3f4f6;
+            --accent-foreground: #111827;
+            --border: #e5e7eb;
+            --radius: 0.5rem;
+            padding-top: env(safe-area-inset-top, 0px);
+            padding-bottom: env(safe-area-inset-bottom, 0px);
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root:not([data-theme="light"]) {
+                --background: #0a0a0a;
+                --foreground: #ededed;
+                --primary: #3b82f6;
+                --primary-foreground: #ffffff;
+                --secondary: #1f2937;
+                --secondary-foreground: #f9fafb;
+                --muted: #111827;
+                --muted-foreground: #9ca3af;
+                --accent: #1f2937;
+                --accent-foreground: #f9fafb;
+                --border: #374151;
+            }
+            color-scheme: dark;
+        }
+
+        :root[data-theme="dark"] {
+            --background: #0a0a0a;
+            --foreground: #ededed;
+            --primary: #3b82f6;
+            --primary-foreground: #ffffff;
+            --secondary: #1f2937;
+            --secondary-foreground: #f9fafb;
+            --muted: #111827;
+            --muted-foreground: #9ca3af;
+            --accent: #1f2937;
+            --accent-foreground: #f9fafb;
+            --border: #374151;
+            color-scheme: dark;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            font-size: 14px;
+            line-height: 1.5;
+            background: var(--background);
+            color: var(--foreground);
+            margin: 0;
+            padding: 0;
+            padding-inline: 16px;
+        }
+
+        a {
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 24px 0;
+        }
+
+        .header {
+            padding: 16px 0;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 32px;
+        }
+
+        .header h1 {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .header p {
+            color: var(--muted-foreground);
+            font-size: 16px;
+        }
+
+        .disclaimer {
+            background: var(--muted);
+            border-left: 4px solid var(--primary);
+            padding: 16px;
+            border-radius: var(--radius);
+            margin-bottom: 24px;
+        }
+
+        .disclaimer h3 {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .disclaimer p {
+            font-size: 13px;
+            color: var(--muted-foreground);
+            line-height: 1.4;
+        }
+
+        .nav-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 16px;
+            margin-bottom: 32px;
+        }
+
+        .nav-card {
+            background: var(--secondary);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 16px;
+            transition: all 0.2s ease;
+        }
+
+        .nav-card:hover {
+            background: var(--accent);
+            border-color: var(--primary);
+        }
+
+        .nav-card h3 {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .nav-card p {
+            font-size: 13px;
+            color: var(--muted-foreground);
+            margin-bottom: 12px;
+            line-height: 1.4;
+        }
+
+        .nav-card .status {
+            display: inline-block;
+            padding: 2px 8px;
+            background: var(--primary);
+            color: var(--primary-foreground);
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 500;
+        }
+
+        .section {
+            margin-bottom: 40px;
+        }
+
+        .section h2 {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .timeline-event {
+            padding: 16px;
+            border-left: 2px solid var(--primary);
+            margin-bottom: 12px;
+            background: var(--secondary);
+            border-radius: 0 var(--radius) var(--radius) 0;
+        }
+
+        .timeline-date {
+            display: inline-block;
+            background: var(--primary);
+            color: var(--primary-foreground);
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
+
+        .timeline-title {
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .timeline-description {
+            font-size: 13px;
+            color: var(--muted-foreground);
+            line-height: 1.4;
+        }
+
+        .category-tag {
+            display: inline-block;
+            padding: 2px 8px;
+            background: var(--muted);
+            color: var(--muted-foreground);
+            border-radius: 12px;
+            font-size: 11px;
+            margin-top: 8px;
+        }
+
+        .principles {
+            display: grid;
+            gap: 16px;
+        }
+
+        .principle {
+            background: var(--secondary);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 16px;
+        }
+
+        .principle h4 {
+            font-size: 15px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .principle ul {
+            padding-left: 20px;
+            font-size: 13px;
+            color: var(--muted-foreground);
+        }
+
+        .principle li {
+            margin-bottom: 4px;
+        }
+
+        .footer {
+            margin-top: 40px;
+            padding-top: 24px;
+            border-top: 1px solid var(--border);
+            font-size: 12px;
+            color: var(--muted-foreground);
+            text-align: center;
+        }
+
+        @media (max-width: 640px) {
+            .nav-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .container {
+                padding: 16px 0;
+            }
+
+            .header h1 {
+                font-size: 20px;
+            }
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>Understanding Sara Duterte & ICC</h1>
+            <p>Facts, timelines, documents, and legal context — presented with sources.</p>
+        </header>
+
+        <div class="disclaimer">
+            <h3>Disclaimer</h3>
+            <p>This is an independent informational project. This website is not affiliated with the Office of the Vice President, the International Criminal Court, the Philippine government, or any political campaign.</p>
+        </div>
+
+        <div class="section">
+            <h2>Explore Topics</h2>
+            <div class="nav-grid">
+                <div class="nav-card">
+                    <h3>Sara Duterte</h3>
+                    <p>Biography, public offices, official statements, and relevant public record.</p>
+                    <span class="status">Ready</span>
+                </div>
+                <div class="nav-card">
+                    <h3>The ICC Explained</h3>
+                    <p>Understanding the International Criminal Court, its jurisdiction, and processes.</p>
+                    <span class="status">Ready</span>
+                </div>
+                <div class="nav-card">
+                    <h3>Philippines & ICC</h3>
+                    <p>Historical relationship, treaty membership, and legal context.</p>
+                    <span class="status">Ready</span>
+                </div>
+                <div class="nav-card">
+                    <h3>Timeline</h3>
+                    <p>Chronological record of key events related to the investigation.</p>
+                    <span class="status">Ready</span>
+                </div>
+                <div class="nav-card">
+                    <h3>Documents</h3>
+                    <p>Primary source documents from ICC, Philippine government, and official bodies.</p>
+                    <span class="status">Coming Soon</span>
+                </div>
+                <div class="nav-card">
+                    <h3>Legal Context</h3>
+                    <p>ICC jurisdiction, complementarity, admissibility, and individual responsibility.</p>
+                    <span class="status">Coming Soon</span>
+                </div>
+                <div class="nav-card">
+                    <h3>Claims & Fact-Check</h3>
+                    <p>Verification status of claims and statements in public discourse.</p>
+                    <span class="status">Coming Soon</span>
+                </div>
+                <div class="nav-card">
+                    <h3>Sources</h3>
+                    <p>Directory of primary and secondary sources used in this project.</p>
+                    <span class="status">Coming Soon</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>Timeline Preview</h2>
+            <div class="timeline-event">
+                <div class="timeline-date">2024-03-15</div>
+                <div class="timeline-title">ICC Prosecutor Requests Authorization to Open Investigation</div>
+                <div class="timeline-description">The International Criminal Court announced the opening of an investigation into the Philippines.</div>
+                <span class="category-tag">ICC</span>
+            </div>
+            <div class="timeline-event">
+                <div class="timeline-date">2023-11-14</div>
+                <div class="timeline-title">Philippines Withdrawal from ICC</div>
+                <div class="timeline-description">The Philippines formally withdrew from the Rome Statute, taking effect in March 2019.</div>
+                <span class="category-tag">Philippines & ICC</span>
+            </div>
+            <div class="timeline-event">
+                <div class="timeline-date">2022-06-30</div>
+                <div class="timeline-title">Sara Duterte Sworn In</div>
+                <div class="timeline-description">Sara Duterte assumed office as the 15th Vice President of the Philippines.</div>
+                <span class="category-tag">Sara Duterte</span>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>Editorial Principles</h2>
+            <div class="principles">
+                <div class="principle">
+                    <h4>Neutrality</h4>
+                    <ul>
+                        <li>Does not persuade visitors to support or oppose any political actor</li>
+                        <li>Does not endorse or attack political parties, candidates, or governments</li>
+                        <li>Does not tell visitors how to vote</li>
+                        <li>Does not present allegations as established facts</li>
+                    </ul>
+                </div>
+                <div class="principle">
+                    <h4>Attribution</h4>
+                    <ul>
+                        <li>Claims are clearly attributed to their sources</li>
+                        <li>Uses phrasing like: "According to the ICC..."</li>
+                        <li>Distinguishes between direct quotes and paraphrases</li>
+                        <li>Links to original sources when available</li>
+                    </ul>
+                </div>
+                <div class="principle">
+                    <h4>Source Priority</h4>
+                    <ul>
+                        <li>Primary sources prioritized</li>
+                        <li>Official documents and court records</li>
+                        <li>Government documents and statements</li>
+                        <li>Established journalism</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <footer class="footer">
+            <p>This is an Artifact preview of the Sara Duterte & ICC Information Website.</p>
+            <p>The full production application includes PostgreSQL database, n8n automation, and admin approval system.</p>
+            <p>Last updated: September 23, 2026</p>
+        </footer>
+    </div>
+
+    <script>
+        // Theme toggle functionality
+        const themeToggle = document.createElement('button');
+        themeToggle.innerHTML = '🌓';
+        themeToggle.style.position = 'fixed';
+        themeToggle.style.bottom = '16px';
+        themeToggle.style.right = '16px';
+        themeToggle.style.width = '40px';
+        themeToggle.style.height = '40px';
+        themeToggle.style.borderRadius = '50%';
+        themeToggle.style.border = '1px solid var(--border)';
+        themeToggle.style.background = 'var(--secondary)';
+        themeToggle.style.color = 'var(--foreground)';
+        themeToggle.style.fontSize = '16px';
+        themeToggle.style.cursor = 'pointer';
+        themeToggle.style.zIndex = '1000';
+        themeToggle.style.display = 'flex';
+        themeToggle.style.alignItems = 'center';
+        themeToggle.style.justifyContent = 'center';
+        document.body.appendChild(themeToggle);
+
+        function getStoredTheme() {
+            try {
+                return localStorage.getItem('theme');
+            } catch {
+                return null;
+            }
+        }
+
+        function setStoredTheme(theme) {
+            try {
+                localStorage.setItem('theme', theme);
+            } catch {}
+        }
+
+        function getSystemTheme() {
+            return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        }
+
+        function setTheme(theme) {
+            document.documentElement.setAttribute('data-theme', theme);
+            setStoredTheme(theme);
+        }
+
+        function toggleTheme() {
+            const current = document.documentElement.getAttribute('data-theme');
+            const system = getSystemTheme();
+
+            if (!current) {
+                // System theme active, switch to opposite
+                setTheme(system === 'dark' ? 'light' : 'dark');
+            } else if (current === 'dark') {
+                setTheme('light');
+            } else {
+                setTheme('dark');
+            }
+        }
+
+        themeToggle.addEventListener('click', toggleTheme);
+
+        // Initialize theme
+        const storedTheme = getStoredTheme();
+        if (storedTheme) {
+            setTheme(storedTheme);
+        }
+    </script>
+</body>
+</html>
